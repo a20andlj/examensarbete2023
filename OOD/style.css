@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(228, 239, 228, 1);
+    background-color: rgba(240, 240, 200, 1);
 }
 .content {
     margin: auto;
@@ -13,5 +13,5 @@ body {
 }
 #search-button {
     border: none;
-    background-color: rgba(228, 239, 228, 1);
+    background-color:  rgba(240, 240, 200, 1);
 }
