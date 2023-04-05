@@ -1,12 +1,14 @@
-// Variables
+/*********  OBJECT ORIENTED DESIGN  *********/
+
+//Random names
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria', 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
 const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
-let randNum;
-const max = 10;
-let genTotal = 10;
-let a = 1;
-const custList = [];
-const arrName = [];
+
+// Variables and arrays
+const max = 10; //To use all names in the array
+let genTotal = 10; //How many customers to generate
+let a = 1; // CustID
+const custList = []; 
 let allCustomers = document.getElementById('customer-list');
 
 // Customer Class
@@ -16,7 +18,7 @@ class Customer {
     custID;
     eneCons;
     
-    constructor() { //fyra arrayer i DOD
+    constructor() {
         this.fname = fnames[Math.floor(Math.random()*max)],
         this.lname = lnames[Math.floor(Math.random()*max)],
         this.custID = a++,
@@ -28,16 +30,15 @@ class Customer {
     }
 }
 
-// Generate random customers (push t 4 arrayer DOD)
+// Generate random customers and push them i Customer list
 for(let i = 0; i < genTotal; i++) {
     const customer = new Customer;
     custList.push(customer);
 }
 
-
 console.log(custList);
 
-
+// Print the list on the site
 function render() {
     str = "<table>";
 
