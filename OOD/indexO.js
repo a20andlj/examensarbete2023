@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 10000; //How many customers to generate
+let genTotal = 100; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -62,7 +62,7 @@ var hashes = [];
 
 // Look through every object and put in hash-list
 for (customer of custList) {
-    var hashindex = Math.floor(customer.eneCons/5000);
+    var hashindex = Math.floor(customer.eneCons/1000);
     if (typeof hashes[hashindex] === 'undefined') {
         hashes[hashindex] = [];
     }

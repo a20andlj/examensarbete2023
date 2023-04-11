@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables
 const max = 10;
-let genTotal = 1000;
+let genTotal = 100;
 let a = 1;
 
 
@@ -44,8 +44,8 @@ function render() {
 
 render();
 
-/****** CLUSTERING THE CUSTOMERS ******/
 
+/****** CLUSTERING THE CUSTOMERS ******/
 var hashes = [];
 
 // Look through every array and put in hash-list
@@ -97,6 +97,6 @@ console.log(hashes);
 // STEG1: Samma ihop o lägg i hinkar 
 // STEG2: kolla i hinkarna o kolla avstånd till de närliggande hinkarna
 // Själva algoritmen är samma för DOD o OOD _ men för DOD då lägger vi inte objektet i hinken - vi lägger - istället för att hinken är en tom lista
-// aå är hinken arrayen - puschar in energikonsumtioner o namn i DOD. Varje hink är ett antal arrayer.
+// så är hinken arrayen - puschar in energikonsumtioner o namn i DOD. Varje hink är ett antal arrayer.
 // bucket.push görs istället - o varje hink har ett gränsvärde
 // Randsom seed fixar 

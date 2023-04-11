@@ -22,4 +22,6 @@ body {
     border: solid 1px;
     margin: 0 auto;
     margin-bottom: 10px;
+    overflow: scroll;
+    background-color: white;
 }
