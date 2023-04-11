@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 10; //How many customers to generate
+let genTotal = 10000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -34,11 +34,12 @@ class Customer {
 for(let i = 0; i < genTotal; i++) {
     const customer = new Customer;
     custList.push(customer);
+    // console.log(customer);
 }
 
-console.log(custList);
+// console.log(custList);
 
-// Print the list on the site
+// Print the custList on the site
 function render() {
     str = "<table>";
 
@@ -56,11 +57,17 @@ render();
 
 
 
+/****** CLUSTERING THE CUSTOMERS ******/
+var hashes = [];
 
+// Look through every object and put in hash-list
+for (customer of custList) {
+    var hashindex = Math.floor(customer.eneCons/5000);
+    if (typeof hashes[hashindex] === 'undefined') {
+        hashes[hashindex] = [];
+    }
+    hashes[hashindex].push(customer);
+}
 
-
-
-
-
-
+console.log(hashes);
 
