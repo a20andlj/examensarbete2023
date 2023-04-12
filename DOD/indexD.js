@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables
 const max = 10;
-let genTotal = 100;
+let genTotal = 10;
 let a = 1;
 
 
@@ -31,12 +31,17 @@ for(let i = 0; i < genTotal; i++) {
 // Display customers on site
 function render() {
     str = "<table>";
+    str += "<th>" + "Förnamn" + "</th>";
+    str += "<th>" + "Efternamn" + "</th>";
+    str += "<th>" + "Kund-ID" + "</th>";
+    str += "<th>" + "Elförbruk/år" + "</th>";
 
     for(i = 0; i < genTotal; i++) {
         str+="<tr><td>"+fname[i]+"</td>";
         str+="<td>"+lname[i]+"</td>";
         str+="<td>"+custID[i]+"</td>";
         str+="<td>"+eneCons[i]+"</td></tr>";
+        
     }
     str += "</table>";
     allCustomers.innerHTML=str;

@@ -42,6 +42,10 @@ for(let i = 0; i < genTotal; i++) {
 // Print the custList on the site
 function render() {
     str = "<table>";
+    str += "<th>" + "Förnamn" + "</th>";
+    str += "<th>" + "Efternamn" + "</th>";
+    str += "<th>" + "Kund-ID" + "</th>";
+    str += "<th>" + "Elförbruk/år" + "</th>";
 
     for(i = 0; i < custList.length; i++) {
         str+="<tr><td>"+custList[i].fname+"</td>";

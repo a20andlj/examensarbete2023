@@ -17,7 +17,7 @@ body {
 }
 
 #customer-list {
-    width: 400px;
+    width: fit-content;
     height: 400px;
     margin-top: 20px;
     border: solid 1px;
@@ -25,4 +25,20 @@ body {
     margin-bottom: 10px;
     overflow: scroll;
     background-color: white;
+}
+
+table {
+    font-size: 14px;
+    border: 1px solid lightgrey;
+    
+}
+
+th {
+    font-size: 14px;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid lightgrey;
 }
