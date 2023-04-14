@@ -50,7 +50,7 @@ function render() {
 render();
 
 
-/****** CLUSTERING THE CUSTOMERS ******/
+/****** CLUSTERING THE CUSTOMERS ENERGYCONSUMPTION ******/
 var hashes = [];
 
 // Look through every array and put in hash-list
@@ -87,6 +87,16 @@ for (let i = 0; i < eneCons.length; i++) {
 }
 
 console.log(hashes);
+
+
+
+
+
+
+
+
+
+
 
 
 
