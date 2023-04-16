@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 10; //How many customers to generate
+let genTotal = 100; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -22,7 +22,7 @@ class Customer {
         this.fname = fnames[Math.floor(Math.random()*max)],
         this.lname = lnames[Math.floor(Math.random()*max)],
         this.custID = a++,
-        this.eneCons = Math.floor(Math.random() * 20 + 5)
+        this.eneCons = Math.floor(Math.random() * 100);
     }
 
     introduceSelf() {
@@ -63,16 +63,85 @@ render();
 /****** CLUSTERING THE CUSTOMERS ENERGYCONSUMPTION ******/
 var hashes = [];
 
-// Look through every object and put in hash-list
+// STEP 1: Look through every object and put in hash-list
 for (customer of custList) {
-    var hashindex = Math.floor(customer.eneCons/5);
+    var hashindex = Math.floor(customer.eneCons/10);
     if (typeof hashes[hashindex] === 'undefined') {
         hashes[hashindex] = [];
     }
     hashes[hashindex].push(customer);
 }
 
-console.log(hashes);
+// console.log(hashes);
+const buckets =  hashes;
+
+// console.log(buckets[0])
+
+let bucketTotal = 0;
+let bucketAvg = 0;
+
+
+function calcAvg() {
+    let i;
+    let j;
+    for (let i = 0; i < buckets.length; i++) {  
+        console.log(buckets[i]);
+        
+        for(let j = 0; j < buckets[i].length; j++) {
+            console.log(buckets[i][j].eneCons);
+            
+
+        }
+        
+    }
+    buckets[i][j].forEach(eneCons => {
+        bucketTotal += buckets[i][j];
+    });
+    console.log(bucketTotal);
+}
+
+
+calcAvg();
+
+// console.log("avg in bucket 0-10 is: " + bucketAvg)
+
+
+
+
+
+
+// let array = [1,5,10,12,15];
+
+// let total = 0;
+// for (let i = 0; i < array.length; i++) {
+//     total += array[i];
+// }
+// let avg = total / array.length;
+
+// console.log(avg);
+
+
+
+
+
+
+// STEP 2: Clustring 
+
+
+
+// for(i=0; i<customer.length; i++) {
+//     for (j=i-1; j<i +1; j++) {
+//         if (eneCons-bucketcenter < 3) {
+//             eneCons+=(eneCons+average)*0.1;
+//         }
+//     }
+    // for (j=i-1; j<i +1; j++) {
+    //     if (eneCons-bucketcenter < 3) {
+    //         eneCons+=(eneCons-average)*0.1;
+    //     }
+    // }
+// }
+//  console.log(customer.eneCons);
 
 
 // Gå igenom och jämka - ta reda på medlet för det här klustret - alla som är inom 
@@ -104,19 +173,22 @@ procedure tagNeighbors(Entity E, QueryRadius)
 end procedure
 */
 
-/*
-for(i=0;i<buckets.length;i++){
 
-for(j=i-1;j<i+1;j++){
-if consumption-bucketcenter < 5
-addera samman deras consumption
-räkna upp en räknare för de som är inom talet
-när klar
-for(j=i-1;j<i+1;j++){
-consumption+=(consumption-average)*0.1;
+// for(i=0;i<buckets.length;i++){
+//     for(j=i-1;j<i+1;j++){
+//         if (consumption-bucketcenter < 5)
+//             //addera samman deras consumption
+//             //räkna upp en räknare för de som är inom talet
+//             //när klar
+//     }
+//     for(j=i-1;j<i+1;j++){
+//         consumption+=(consumption-average)*0.1;
+//     }
+// }
 
-repetera flera gånger
 
-if consumption-bucketcenter < 5 
-*/
+//repetera flera gånger
+
+//if consumption-bucketcenter < 5 
+
 
