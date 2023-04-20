@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 100; //How many customers to generate
+let genTotal = 10; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -22,7 +22,7 @@ class Customer {
         this.fname = fnames[Math.floor(Math.random()*max)],
         this.lname = lnames[Math.floor(Math.random()*max)],
         this.custID = a++,
-        this.eneCons = Math.floor(Math.random() * 100);
+        this.eneCons = Math.floor(Math.random() * 300);
     }
 
     introduceSelf() {
@@ -65,83 +65,38 @@ var hashes = [];
 
 // STEP 1: Look through every object and put in hash-list
 for (customer of custList) {
-    var hashindex = Math.floor(customer.eneCons/10);
+    var hashindex = Math.floor(customer.eneCons/60);
     if (typeof hashes[hashindex] === 'undefined') {
         hashes[hashindex] = [];
     }
     hashes[hashindex].push(customer);
 }
 
-// console.log(hashes);
-const buckets =  hashes;
-
-// console.log(buckets[0])
-
-let bucketTotal = 0;
-let bucketAvg = 0;
+let buckets = hashes;
 
 
-function calcAvg() {
-    let i;
-    let j;
-    for (let i = 0; i < buckets.length; i++) {  
+// Clustering 
+let allBuckets = 0;
+const bucketCenter = 30;
+let eneConsTotal = 0;
+
+// Alla buckets innehåller 0-59 60-119 120-179 180-239 240-299
+function clustering() {
+    for(let i=0; i < buckets.length; i++) {
         console.log(buckets[i]);
-        
-        for(let j = 0; j < buckets[i].length; j++) {
-            console.log(buckets[i][j].eneCons);
+        for(let j=0; j < customer.eneCons; j++) {
             
-
         }
-        
     }
-    buckets[i][j].forEach(eneCons => {
-        bucketTotal += buckets[i][j];
-    });
-    console.log(bucketTotal);
 }
 
-
-calcAvg();
-
-// console.log("avg in bucket 0-10 is: " + bucketAvg)
+clustering();
 
 
 
+//Kollar om deras consumption är inom mitten och det kan du veta att det är början av bucketen + x
+// Sen tar du det minus
 
-
-
-// let array = [1,5,10,12,15];
-
-// let total = 0;
-// for (let i = 0; i < array.length; i++) {
-//     total += array[i];
-// }
-// let avg = total / array.length;
-
-// console.log(avg);
-
-
-
-
-
-
-// STEP 2: Clustring 
-
-
-
-// for(i=0; i<customer.length; i++) {
-//     for (j=i-1; j<i +1; j++) {
-//         if (eneCons-bucketcenter < 3) {
-//             eneCons+=(eneCons+average)*0.1;
-//         }
-//     }
-    // for (j=i-1; j<i +1; j++) {
-    //     if (eneCons-bucketcenter < 3) {
-    //         eneCons+=(eneCons-average)*0.1;
-    //     }
-    // }
-// }
-//  console.log(customer.eneCons);
 
 
 // Gå igenom och jämka - ta reda på medlet för det här klustret - alla som är inom 
