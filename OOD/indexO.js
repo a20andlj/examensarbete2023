@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 10; //How many customers to generate
+let genTotal = 20; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -54,7 +54,7 @@ function render() {
         str+="<td>"+custList[i].eneCons+"</td></tr>";
     }
     str += "</table>";
-    allCustomers.innerHTML=str;
+    allCustomers.innerHTML = str;
 }
 
 render();
@@ -75,75 +75,52 @@ for (customer of custList) {
 let buckets = hashes;
 
 
-// Clustering 
-let allBuckets = 0;
-const bucketCenter = 30;
-let eneConsTotal = 0;
+// K-mean Clustering *****
 
 // Alla buckets innehåller 0-59 60-119 120-179 180-239 240-299
+let bucketCenter = 30;
+let clusterTotal = 60;
+let energyCons;
+let treshold = 60;
+
+
+// Clustringen *** OBS EJ HELT KLAR!!!
 function clustering() {
-    for(let i=0; i < buckets.length; i++) {
+    for(let i=1; i<(buckets.length-1); i++) { 
+        console.log("-------------");
         console.log(buckets[i]);
-        for(let j=0; j < customer.eneCons; j++) {
-            
+
+        var midpoint=(i*clusterTotal)+bucketCenter;
+        var total=0;
+        var cnt=0;
+        for (let j=i-1; j<=(i+1); j++) {
+                for(customer of buckets[j]){
+                    // if(j>0&&j<buckets.length)
+                    if(Math.abs(custList.eneCons-midpoint)<treshold){
+                            cnt++;
+                            total+=custList.eneCons;
+                    }    
+                }
+                var avg=total/cnt;
+                for(customer of buckets[j]){
+                    // if(j>0&&j<buckets.length)
+                    if(Math.abs(custList.eneCons-avg)<treshold){
+                            var dist=custList.eneCons-avg;
+                            dist=dist/treshold;
+                            if(dist>=0){
+                                dist=1-dist;
+                            }else{
+                                dist=-(1+dist);
+                            }
+                            custList.eneCons-=dist;
+                    }    
+                }
         }
+
+
     }
 }
 
+
 clustering();
-
-
-
-//Kollar om deras consumption är inom mitten och det kan du veta att det är början av bucketen + x
-// Sen tar du det minus
-
-
-
-// Gå igenom och jämka - ta reda på medlet för det här klustret - alla som är inom 
-// vi är inte intresserade av specifik förbrukning av bara vilka vilka förbrukar lika mycket som andra inom ett särsklilt avstånd
-
-/*
-1 1 | 6,4 6,4 
-
-9,1 9,1 11,8 11,8 11,8  = ca 10 medel
-
-15 |  17 19 19
-
-Bestämt mängden kluster - enklare räkna på om 
-klusterstorlek är 5 exempelvis
-
-*/
-
-/*
-procedure tagNeighbors(Entity E, QueryRadius) 
-    RangedCells = CalculateCellsInRange(E, QueryRadius)
-    
-    for each cell in RangedCells
-        for idx = Initial[cell], idx < Initial[cell] + Used[cell], idx += 1 do
-            if SqDistance(HashTable[idx], E) < QueryRadius2 then 
-                TagNeighbor(HashTable[idx])
-            end if 
-        end for
-    end for 
-end procedure
-*/
-
-
-// for(i=0;i<buckets.length;i++){
-//     for(j=i-1;j<i+1;j++){
-//         if (consumption-bucketcenter < 5)
-//             //addera samman deras consumption
-//             //räkna upp en räknare för de som är inom talet
-//             //när klar
-//     }
-//     for(j=i-1;j<i+1;j++){
-//         consumption+=(consumption-average)*0.1;
-//     }
-// }
-
-
-//repetera flera gånger
-
-//if consumption-bucketcenter < 5 
-
 
