@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables
 const max = 10;
-let genTotal = 10;
+let genTotal = 10000;
 let a = 1;
 
 
@@ -23,7 +23,7 @@ for(let i = 0; i < genTotal; i++) {
     fname.push(fnames[Math.floor(Math.random()*max)]);
     lname.push(lnames[Math.floor(Math.random()*max)]);
     custID.push(a++);
-    eneCons.push(Math.floor(Math.random() * 20000 + 5000))
+    eneCons.push(Math.floor(Math.random() * 30000))
 }
 
 // console.log(fname, lname, custID, eneCons);
@@ -50,68 +50,97 @@ function render() {
 render();
 
 
-/****** CLUSTERING THE CUSTOMERS ENERGYCONSUMPTION ******/
-var hashes = [];
+/****** CLUSTERING THE DATAORIENTED CUSTOMERS ENERGYCONSUMPTION ******/
 
-// Look through every array and put in hash-list
-for (let i = 0; i < fname.length; i++) {
-    var hashindex = Math.floor(eneCons[i]/1000);
-    if (typeof hashes[hashindex] === 'undefined') {
-        hashes[hashindex] = [];
+// ****** K-means Clustering *****
+
+// All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
+let bucketCenter = 3000; // <== CHANGE HERE
+let clusterTotal = 6000; // <== CHANGE HERE
+let treshold = 4500; // <== CHANGE HERE
+
+var hashesCustID = [];
+var hashesEneCons = [];
+var custIDBuckets = 0;
+var eneConsBuckets = 0;
+
+// The clustering
+function clustering() {
+    for (let i = 0; i < eneCons.length; i++) {
+        var hashindex = Math.floor(eneCons[i]/6000);
+        if (typeof hashesCustID[hashindex] === 'undefined') {
+            hashesCustID[hashindex] = [];
+            hashesEneCons[hashindex] = [];
+        }
+        hashesCustID[hashindex].push(custID[i]);
+        hashesEneCons[hashindex].push(eneCons[i]);
     }
-    hashes[hashindex].push(fname[i]);
+        
+    custIDBuckets = hashesCustID;
+    eneConsBuckets = hashesEneCons;
+
+    for(let i=1; i<(eneConsBuckets.length-1); i++) { 
+        
+        var midpoint=(i*clusterTotal)+bucketCenter;
+        var total=0;
+        var cnt=0;
+        for (let j=i-1; j<=(i+1); j++) {
+            for (eneCons of eneConsBuckets[j]){
+                // if(j>0&&j<buckets.length)
+                if(Math.abs(eneCons-midpoint)<treshold){
+                    cnt++;
+                    total+=eneCons;
+                }    
+            }
+            var avg=total/cnt;
+            for(eneCons of eneConsBuckets[j]){
+                // if(j>0&&j<buckets.length)
+                if(Math.abs(eneCons-avg)<treshold){
+                    var dist=eneCons-avg;
+                    dist=dist/treshold;
+                    if(dist>=0){
+                        dist=1-dist;
+                    }else{
+                        dist=-(1+dist);
+                    }
+                    eneCons-=dist;
+                }    
+            }
+        }
+    }
+
+    // FLYTTA tillbaka så att arrayen har den uppdaterade datan.
+    // Gå igenom 
+    for (let i = 0; i < eneConsBuckets.length; i++) {
+        for (let j = 0; j < eneConsBuckets[i]; j++) {
+            index = custIDBuckets[i][j];
+            eneCons[index]=hashesEneCons[i][j];
+        }
+    }
+
+    
 }
 
-for (let i = 0; i < lname.length; i++) {
-    var hashindex = Math.floor(eneCons[i]/1000);
-    if (typeof hashes[hashindex] === 'undefined') {
-        hashes[hashindex] = [];
-    }
-    hashes[hashindex].push(lname[i]);
+// Measuring the clustering
+let measurement;
+let start = Date.now();
+console.log(localStorage)
+
+
+// How many times the clusteralgoritm should iterate
+const clusterIteration = 1000;
+for(i=0; i<clusterIteration; i++) {
+    clustering();
 }
 
-for (let i = 0; i < custID.length; i++) {
-    var hashindex = Math.floor(eneCons[i]/1000);
-    if (typeof hashes[hashindex] === 'undefined') {
-        hashes[hashindex] = [];
-    }
-    hashes[hashindex].push(custID[i]);
-}
+// Measuring the clustering
+measurement = Date.now() - start;
+localStorage.setItem("Oldval", measurement.valueOf());
+console.log("Total time taken DOD-clustering: " + measurement + " milliseconds");
 
-for (let i = 0; i < eneCons.length; i++) {
-    var hashindex = Math.floor(eneCons[i]/1000);
-    if (typeof hashes[hashindex] === 'undefined') {
-        hashes[hashindex] = [];
-    }
-    hashes[hashindex].push(eneCons[i]);
-}
 
-console.log(hashes);
+// Checking the clusters
+console.log(eneConsBuckets);
 
 
 
-
-
-
-
-
-
-
-
-
-
-// Vi vill hitta vilka enercons som ligger nära varandra. 
-// OBS! Undvika den naiva approachen där vi jämför alla mot alla
-// Första steget i klustring - vilka grejer ligger nära varandra
-// For-loop som går igenom - skapar en lista om vi gör endimensionellt -så ska vi göra hinkar för consumtionen
-// Vi gör lådor med 1000 i varje - 0-1000 lägger vi i en låda 1000-2000 i en låda...
-// För var o en av dom lådorna sparar vi ner vilka objekt som passar in där
-// Om jag vill hämta alla som ligger fr 0-1000 så behövar jag bara hämta dom som ligger i den listan
-// De jämför jag om dom ligger nära varandra - 85% av klustringen är gjorde.
-// Ett problem - vad händer om den ligger på 982??  Då ligger den lite när 1000 så man måste kolla i två hinkar för de kan ligga nära en gräns.
-// STEG1: Samma ihop o lägg i hinkar 
-// STEG2: kolla i hinkarna o kolla avstånd till de närliggande hinkarna
-// Själva algoritmen är samma för DOD o OOD _ men för DOD då lägger vi inte objektet i hinken - vi lägger - istället för att hinken är en tom lista
-// så är hinken arrayen - puschar in energikonsumtioner o namn i DOD. Varje hink är ett antal arrayer.
-// bucket.push görs istället - o varje hink har ett gränsvärde
-// Randsom seed fixar 
