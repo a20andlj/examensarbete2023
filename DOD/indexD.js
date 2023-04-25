@@ -64,7 +64,7 @@ var hashesEneCons = [];
 var custIDBuckets = 0;
 var eneConsBuckets = 0;
 
-// The clustering
+// The clustering - DOD application
 function clustering() {
     for (let i = 0; i < eneCons.length; i++) {
         var hashindex = Math.floor(eneCons[i]/6000);
@@ -80,7 +80,6 @@ function clustering() {
     eneConsBuckets = hashesEneCons;
 
     for(let i=1; i<(eneConsBuckets.length-1); i++) { 
-        
         var midpoint=(i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
@@ -109,38 +108,35 @@ function clustering() {
         }
     }
 
-    // FLYTTA tillbaka så att arrayen har den uppdaterade datan.
-    // Gå igenom 
+    // Move back the updated data to the eneCons array.
     for (let i = 0; i < eneConsBuckets.length; i++) {
-        for (let j = 0; j < eneConsBuckets[i]; j++) {
-            index = custIDBuckets[i][j];
+        for (let j = 0; j < custIDBuckets[i]; j++) {
+            index = hashesCustID[i][j];
             eneCons[index]=hashesEneCons[i][j];
         }
     }
+}
 
+// Measuring the clustering
+let timeTaken;
+let timeDataorientedClustering = [];
+ 
+for (j=0; j < 500; j++) {
+    let start = Date.now();
     
+
+    // How many times the clusteralgoritm should iterate
+    const clusterIteration = 1000;
+    for(i=0; i<clusterIteration; i++) {
+        clustering();
+    }
+
+    timeTaken = Date.now() - start;
+    // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
+    timeDataorientedClustering.push(timeTaken);
+
+    // Checking the clusters
+    // console.log(buckets);
 }
 
-// Measuring the clustering
-let measurement;
-let start = Date.now();
-console.log(localStorage)
-
-
-// How many times the clusteralgoritm should iterate
-const clusterIteration = 1000;
-for(i=0; i<clusterIteration; i++) {
-    clustering();
-}
-
-// Measuring the clustering
-measurement = Date.now() - start;
-localStorage.setItem("Oldval", measurement.valueOf());
-console.log("Total time taken DOD-clustering: " + measurement + " milliseconds");
-
-
-// Checking the clusters
-console.log(eneConsBuckets);
-
-
-
+console.log(timeDataorientedClustering);

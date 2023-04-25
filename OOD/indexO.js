@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arrays
 const max = 10; //To use all names in the array
-let genTotal = 1000; //How many customers to generate
+let genTotal = 10000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 let allCustomers = document.getElementById('customer-list');
@@ -76,63 +76,62 @@ let buckets = hashes;
 
 
 // ****** K-means Clustering *****
+// STEP 2: 
 
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
 let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
-let energyCons;
 let treshold = 4500; // <== CHANGE HERE
 
-
-// The clustering
+// The clustering function
 function clustering() {
     for(let i=1; i<(buckets.length-1); i++) { 
-        // console.log("-------------");
-        // console.log(buckets[i]);
-
         var midpoint=(i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
         for (let j=i-1; j<=(i+1); j++) {
-                for(customer of buckets[j]){
-                    // if(j>0&&j<buckets.length)
-                    if(Math.abs(customer.eneCons-midpoint)<treshold){
-                            cnt++;
-                            total+=customer.eneCons;
-                    }    
-                }
-                var avg=total/cnt;
-                for(customer of buckets[j]){
-                    // if(j>0&&j<buckets.length)
-                    if(Math.abs(customer.eneCons-avg)<treshold){
-                            var dist=customer.eneCons-avg;
-                            dist=dist/treshold;
-                            if(dist>=0){
-                                dist=1-dist;
-                            }else{
-                                dist=-(1+dist);
-                            }
-                            customer.eneCons-=dist;
-                    }    
-                }
+            for(customer of buckets[j]){
+                if(Math.abs(customer.eneCons-midpoint)<treshold){
+                    cnt++;
+                    total+=customer.eneCons;
+                }    
+            }
+            var avg=total/cnt;
+            for(customer of buckets[j]){
+                if(Math.abs(customer.eneCons-avg)<treshold){
+                    var dist=customer.eneCons-avg;
+                    dist=dist/treshold;
+                    if(dist>=0){
+                        dist=1-dist;
+                    }else{
+                        dist=-(1+dist);
+                    }
+                    customer.eneCons-=dist;
+                }    
+            }
         }
-
     }
 }
 
+let timeTaken;
+let timeObjectClustering = [];
+ 
+for (j=0; j < 500; j++) {
+    let start = Date.now();
+    
 
-// How many times the clusteralgoritm should iterate
-const clusterIteration = 10000;
+    // How many times the clusteralgoritm should iterate
+    const clusterIteration = 1000;
+    for(i=0; i<clusterIteration; i++) {
+        clustering();
+    }
 
-let start = Date.now();
+    timeTaken = Date.now() - start;
+    // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
+    timeObjectClustering.push(timeTaken);
 
-for(i=0; i<clusterIteration; i++) {
-    clustering();
+    // Checking the clusters
+    // console.log(buckets);
 }
 
-let timeTaken = Date.now() - start;
-console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
-
-// Checking the clusters
-console.log(buckets)
-
+console.log(timeObjectClustering);
