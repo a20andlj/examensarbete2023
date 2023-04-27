@@ -83,7 +83,7 @@ let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
 let treshold = 4500; // <== CHANGE HERE
 
-// The clustering function
+// Clustering --- OOD Application
 function clustering() {
     for(let i=1; i<(buckets.length-1); i++) { 
         var midpoint=(i*clusterTotal)+bucketCenter;
@@ -113,12 +113,15 @@ function clustering() {
     }
 }
 
+
+
+// ********** MEASURING the clustering *********
 let timeTaken;
 let timeObjectClustering = [];
- 
-for (j=0; j < 500; j++) {
+
+const measurePoints = 100;
+for (j=0; j < measurePoints; j++) {
     let start = Date.now();
-    
 
     // How many times the clusteralgoritm should iterate
     const clusterIteration = 1000;
@@ -129,9 +132,10 @@ for (j=0; j < 500; j++) {
     timeTaken = Date.now() - start;
     // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
     timeObjectClustering.push(timeTaken);
-
-    // Checking the clusters
-    // console.log(buckets);
+    
 }
+
+// Checking the clusters
+// console.log(buckets);
 
 console.log(timeObjectClustering);

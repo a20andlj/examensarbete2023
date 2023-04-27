@@ -9,7 +9,6 @@ const max = 10;
 let genTotal = 10000;
 let a = 1;
 
-
 let allCustomers = document.getElementById('customer-list'); 
 
 // 4 Customer arrays
@@ -28,7 +27,7 @@ for(let i = 0; i < genTotal; i++) {
 
 // console.log(fname, lname, custID, eneCons);
 
-// Display customers on site
+// Display customers on website
 function render() {
     str = "<table>";
     str += "<th>" + "Förnamn" + "</th>";
@@ -61,11 +60,12 @@ let treshold = 4500; // <== CHANGE HERE
 
 var hashesCustID = [];
 var hashesEneCons = [];
-var custIDBuckets = 0;
-var eneConsBuckets = 0;
+var custIDBuckets;
+var eneConsBuckets;
 
-// The clustering - DOD application
+// Clustering --- DOD Application
 function clustering() {
+    // Sort the customers in 5 hashes and give them index
     for (let i = 0; i < eneCons.length; i++) {
         var hashindex = Math.floor(eneCons[i]/6000);
         if (typeof hashesCustID[hashindex] === 'undefined') {
@@ -75,17 +75,17 @@ function clustering() {
         hashesCustID[hashindex].push(custID[i]);
         hashesEneCons[hashindex].push(eneCons[i]);
     }
-        
-    custIDBuckets = hashesCustID;
+
     eneConsBuckets = hashesEneCons;
+    custIDBuckets = hashesCustID;
 
     for(let i=1; i<(eneConsBuckets.length-1); i++) { 
-        var midpoint=(i*clusterTotal)+bucketCenter;
+        var midpoint = (i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
         for (let j=i-1; j<=(i+1); j++) {
             for (eneCons of eneConsBuckets[j]){
-                // if(j>0&&j<buckets.length)
+                // if(j>0 && j<buckets.length)
                 if(Math.abs(eneCons-midpoint)<treshold){
                     cnt++;
                     total+=eneCons;
@@ -106,25 +106,26 @@ function clustering() {
                 }    
             }
         }
+        
     }
-
     // Move back the updated data to the eneCons array.
     for (let i = 0; i < eneConsBuckets.length; i++) {
-        for (let j = 0; j < custIDBuckets[i]; j++) {
-            index = hashesCustID[i][j];
-            eneCons[index]=hashesEneCons[i][j];
+        for (let j = 0; j < eneConsBuckets[i].length; j++) {
+            index = custIDBuckets[i][j];
+            eneCons[index] = hashesEneCons[i][j];
         }
     }
 }
 
-// Measuring the clustering
+
+// ********* MEASURING the clustering **********
 let timeTaken;
 let timeDataorientedClustering = [];
- 
-for (j=0; j < 500; j++) {
+
+const measurePoints = 5; 
+for (j=0; j < measurePoints; j++) {
     let start = Date.now();
     
-
     // How many times the clusteralgoritm should iterate
     const clusterIteration = 1000;
     for(i=0; i<clusterIteration; i++) {
@@ -134,9 +135,10 @@ for (j=0; j < 500; j++) {
     timeTaken = Date.now() - start;
     // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
     timeDataorientedClustering.push(timeTaken);
-
-    // Checking the clusters
-    // console.log(buckets);
 }
+
+// Checking the clusters
+console.log(eneCons)
+
 
 console.log(timeDataorientedClustering);
