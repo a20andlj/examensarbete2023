@@ -15,6 +15,33 @@ body {
     border: none;
     background-color: rgba(228, 239, 228, 1);
 }
+#search-button:active {
+    transform: scale(0.98);
+    /* Scaling button to 0.98 to its original size */
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+    /* Lowering the shadow */
+}
+
+#start-cluster {
+    border: none;
+    background-color: rgba(228, 239, 228, 1);
+}
+#start-cluster:active {
+    transform: scale(0.98);
+    /* Scaling button to 0.98 to its original size */
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+    /* Lowering the shadow */
+}
+#stop-cluster {
+    border: none;
+    background-color: rgba(228, 239, 228, 1);
+}
+#stop-cluster:active {
+    transform: scale(0.98);
+    /* Scaling button to 0.98 to its original size */
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+    /* Lowering the shadow */
+}
 
 #customer-list {
     width: fit-content;
