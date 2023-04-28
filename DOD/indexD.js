@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables
 const max = 10;
-let genTotal = 10000;
+let genTotal = 100;
 let a = 1;
 
 // Get HTML elements
@@ -89,6 +89,8 @@ function clustering() {
 
     eneConsBuckets = hashesEneCons;
     custIDBuckets = hashesCustID;
+
+    console.log(eneConsBuckets);
 
     for(let i=1; i<(eneConsBuckets.length-1); i++) { 
         var midpoint = (i*clusterTotal)+bucketCenter;

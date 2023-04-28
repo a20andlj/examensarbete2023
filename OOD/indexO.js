@@ -4,12 +4,18 @@
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria', 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
 const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
 
-// Variables and arrays
+// Variables and arraays
 const max = 10; //To use all names in the array
 let genTotal = 10000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
+
+// Get HTML elements
 let allCustomers = document.getElementById('customer-list');
+const startCluster = document.getElementById('start-cluster');
+
+// Event listeners
+startCluster.addEventListener("click", startClustering);
 
 // Customer Class
 class Customer {
@@ -119,23 +125,25 @@ function clustering() {
 let timeTaken;
 let timeObjectClustering = [];
 
-const measurePoints = 100;
-for (j=0; j < measurePoints; j++) {
-    let start = Date.now();
 
-    // How many times the clusteralgoritm should iterate
-    const clusterIteration = 1000;
-    for(i=0; i<clusterIteration; i++) {
-        clustering();
+function startClustering() {
+    const measurePoints = 1;
+    for (j=0; j < measurePoints; j++) {
+        let start = Date.now();
+
+        // How many times the clusteralgoritm should iterate
+        const clusterIteration = 1;
+        for(i=0; i<clusterIteration; i++) {
+            clustering();
+        }
+
+        timeTaken = Date.now() - start;
+        // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
+        timeObjectClustering.push(timeTaken);
+
+        // Checking the clusters
+        console.log(buckets);
+
+        console.log(timeObjectClustering);
     }
-
-    timeTaken = Date.now() - start;
-    // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
-    timeObjectClustering.push(timeTaken);
-    
 }
-
-// Checking the clusters
-// console.log(buckets);
-
-console.log(timeObjectClustering);
