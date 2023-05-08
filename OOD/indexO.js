@@ -127,12 +127,12 @@ let timeObjectClustering = [];
 
 
 function startClustering() {
-    const measurePoints = 1;
+    const measurePoints = 10;
     for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        const clusterIteration = 1;
+        const clusterIteration = 100;
         for(i=0; i<clusterIteration; i++) {
             clustering();
         }
@@ -141,9 +141,11 @@ function startClustering() {
         // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
         timeObjectClustering.push(timeTaken);
 
-        // Checking the clusters
-        console.log(buckets);
-
-        console.log(timeObjectClustering);
+        
     }
+
+    // Checking the clusters
+    console.log(buckets);
+
+    console.log(timeObjectClustering);
 }
