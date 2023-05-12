@@ -147,14 +147,13 @@ let timeTaken;
 let timeDataorientedClustering = [];
 const measurePoints = 10;
 
-
 function startClustering() {
      console.log("Started the clustering");
      for (j=0; j < measurePoints; j++) {
          let start = Date.now();
 
          // How many times the clusteralgoritm should iterate
-         const clusterIteration = 50;
+         const clusterIteration = 800;
          for(i=0; i<clusterIteration; i++) {
              clustering();
          }
@@ -164,6 +163,6 @@ function startClustering() {
          timeDataorientedClustering.push(timeTaken);
      }
      // Checking the clusters
-     console.log(eneCons)
+     console.log(eneConsBuckets)
      console.log(timeDataorientedClustering);
 }

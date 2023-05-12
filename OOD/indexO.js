@@ -31,6 +31,7 @@ class Customer {
         this.eneCons = Math.floor(Math.random() * 30000); // <== CHANGE HERE
     }
 
+    // Function just to test if the class is working
     introduceSelf() {
         console.log(`Hi! I am ${this.fname} ${this.lname} - I'm customer number ${this.custID}`);
     }
@@ -66,7 +67,7 @@ function render() {
 render();
 
 
-/****** CLUSTERING THE CUSTOMERS ENERGYCONSUMPTION ******/
+/****** CLUSTERING THE CUSTOMERS ENERGY CONSUMPTION ******/
 var hashes = [];
 
 // STEP 1: Look through every object and put in hash-list
@@ -127,12 +128,13 @@ let timeObjectClustering = [];
 
 
 function startClustering() {
+    console.log("Started the clustering");
     const measurePoints = 10;
     for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        const clusterIteration = 100;
+        const clusterIteration = 800;
         for(i=0; i<clusterIteration; i++) {
             clustering();
         }
