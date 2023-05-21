@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arraays
 const max = 10; //To use all names in the array
-let genTotal = 1000; //How many customers to generate
+let genTotal = 100000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 
@@ -128,16 +128,16 @@ function clustering() {
 // ********** MEASURING the clustering *********
 let timeTaken;
 let timeObjectClustering = [];
+const clusterIteration = 100;
+const measurePoints = 100;
 
 
 function startClustering() {
-    console.log("Started the clustering");
-    const measurePoints = 10;
+    console.log("Started clustering OOD");
     for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        const clusterIteration = 100;
         for(i=0; i<clusterIteration; i++) {
             clustering();
         }
@@ -146,8 +146,9 @@ function startClustering() {
         // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
         timeObjectClustering.push(timeTaken);
 
-        
+    
     }
+    console.log("Finished clustering OOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
     // Checking the clusters
     console.log(buckets);
 

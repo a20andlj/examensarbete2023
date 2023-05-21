@@ -97,41 +97,41 @@ function clustering() {
      eneConsBuckets = hashesEneCons;
      custIDBuckets = hashesCustID;
 
-     for(let i=1; i<(eneConsBuckets.length-1); i++) {
-         var midpoint = (i*clusterTotal)+bucketCenter;
-         var total=0;
-         var cnt=0;
-         for (let j=i-1; j<=(i+1); j++) {
-             for (eneConsval of eneConsBuckets[j]){
-                 if(Math.abs(eneConsval-midpoint)<treshold){
-                     cnt++;
-                     total+=eneConsval;
-                 }
-             }
-             var avg=total/cnt;
+    for(let i=1; i<(eneConsBuckets.length-1); i++) {
+        var midpoint = (i*clusterTotal)+bucketCenter;
+        var total=0;
+        var cnt=0;
+        for (let j=i-1; j<=(i+1); j++) {
+            for (eneConsval of eneConsBuckets[j]){
+                if(Math.abs(eneConsval-midpoint)<treshold){
+                    cnt++;
+                    total+=eneConsval;
+                }
+            }
+            var avg=total/cnt;
 
             //  console.log(i,avg,total,cnt,eneConsBuckets.length);
 
-             for(var k=0; k<eneConsBuckets[j].length; k++){
-                 var eneConsval=eneConsBuckets[j][k];
-                 if(Math.abs(eneConsval-avg)<treshold){
-                     var dist=eneConsval-avg;
-                     dist=dist/treshold;
-                     if(dist>=0){
-                         dist=1-dist;
-                     }else{
-                         dist=-(1+dist);
-                     }
-                     // loopcnt++;
-                     // if(loopcnt<100)
-                    //  console.log(eneConsBuckets[j][k],dist);
-                     eneConsBuckets[j][k]-=dist;
-                     // if(loopcnt<100)
-                     //console.log(eneConsBuckets[j][k],dist);
-                 }
-             }
-         }
-     }
+            for(var k=0; k<eneConsBuckets[j].length; k++){
+                var eneConsval=eneConsBuckets[j][k];
+                if(Math.abs(eneConsval-avg)<treshold){
+                    var dist=eneConsval-avg;
+                    dist=dist/treshold;
+                    if(dist>=0){
+                        dist=1-dist;
+                    }else{
+                        dist=-(1+dist);
+                    }
+                    // loopcnt++;
+                    // if(loopcnt<100)
+                //  console.log(eneConsBuckets[j][k],dist);
+                    eneConsBuckets[j][k]-=dist;
+                    // if(loopcnt<100)
+                    //console.log(eneConsBuckets[j][k],dist);
+                }
+            }
+        }
+    }
      // Move back the updated data to the eneCons array.
      for (let i = 0; i < eneConsBuckets.length; i++) {
          for (let j = 0; j < eneConsBuckets[i].length; j++) {
@@ -145,24 +145,28 @@ function clustering() {
 // ********* MEASURING the clustering **********
 let timeTaken;
 let timeDataorientedClustering = [];
-const measurePoints = 10;
+const measurePoints = 40;
+const clusterIteration = 50;
 
 function startClustering() {
-     console.log("Started the clustering");
-     for (j=0; j < measurePoints; j++) {
-         let start = Date.now();
+    console.log("Started clustering DOD");
+    for (j=0; j < measurePoints; j++) {
+        let start = Date.now();
 
-         // How many times the clusteralgoritm should iterate
-         const clusterIteration = 10;
-         for(i=0; i<clusterIteration; i++) {
-             clustering();
-         }
+    // How many times the clusteralgoritm should iterate
 
-         timeTaken = Date.now() - start;
-         // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
-         timeDataorientedClustering.push(timeTaken);
-     }
-     // Checking the clusters
-     console.log(eneConsBuckets)
-     console.log(timeDataorientedClustering);
+    for(i=0; i<clusterIteration; i++) {
+        clustering();
+    }
+
+    timeTaken = Date.now() - start;
+    // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
+    timeDataorientedClustering.push(timeTaken);
+    }
+
+    console.log("Finished clsutering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
+    
+    // Checking the clusters
+    console.log(eneConsBuckets)
+    console.log(timeDataorientedClustering);
 }
