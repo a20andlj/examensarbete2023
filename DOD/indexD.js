@@ -65,7 +65,7 @@ render();
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
 let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
-let treshold = 4500; // <== CHANGE HERE
+let treshold = 3500; // <== CHANGE HERE
 
 var hashesCustID = [];
 var hashesEneCons = [];
@@ -153,7 +153,7 @@ function startClustering() {
          let start = Date.now();
 
          // How many times the clusteralgoritm should iterate
-         const clusterIteration = 800;
+         const clusterIteration = 10;
          for(i=0; i<clusterIteration; i++) {
              clustering();
          }

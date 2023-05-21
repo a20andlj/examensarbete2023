@@ -6,7 +6,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arraays
 const max = 10; //To use all names in the array
-let genTotal = 10000; //How many customers to generate
+let genTotal = 1000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 
@@ -38,8 +38,10 @@ class Customer {
 }
 
 // Generate random customers and push them i Customer list
+var customer = [];
+
 for(let i = 0; i < genTotal; i++) {
-    const customer = new Customer;
+    customer = new Customer;
     custList.push(customer);
     // console.log(customer);
 }
@@ -69,29 +71,30 @@ render();
 
 /****** CLUSTERING THE CUSTOMERS ENERGY CONSUMPTION ******/
 var hashes = [];
-
-// STEP 1: Look through every object and put in hash-list
-for (customer of custList) {
-    var hashindex = Math.floor(customer.eneCons/6000); // <== CHANGE HERE
-    if (typeof hashes[hashindex] === 'undefined') {
-        hashes[hashindex] = [];
-    }
-    hashes[hashindex].push(customer);
-}
-
-let buckets = hashes;
-
-
-// ****** K-means Clustering *****
-// STEP 2: 
+var buckets =[];
 
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
+
 let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
-let treshold = 4500; // <== CHANGE HERE
+let treshold = 3500; // <== CHANGE HERE
 
 // Clustering --- OOD Application
 function clustering() {
+    // Clear buckets for next iteration
+    hashes = [];
+    buckets = [];
+    
+    for (customer of custList) {
+        var hashindex = Math.floor(customer.eneCons/6000); // <== CHANGE HERE
+        if (typeof hashes[hashindex] === 'undefined') {
+            hashes[hashindex] = [];
+        }
+        hashes[hashindex].push(customer);
+    }
+    
+    buckets = hashes;
+
     for(let i=1; i<(buckets.length-1); i++) { 
         var midpoint=(i*clusterTotal)+bucketCenter;
         var total=0;
@@ -134,7 +137,7 @@ function startClustering() {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        const clusterIteration = 800;
+        const clusterIteration = 100;
         for(i=0; i<clusterIteration; i++) {
             clustering();
         }
@@ -145,9 +148,11 @@ function startClustering() {
 
         
     }
-
     // Checking the clusters
     console.log(buckets);
 
     console.log(timeObjectClustering);
+
 }
+
+
