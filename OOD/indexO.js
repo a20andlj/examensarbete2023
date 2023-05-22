@@ -1,4 +1,7 @@
+// import seedrandom from "seedrandom";
+
 /*********  OBJECT ORIENTED DESIGN  *********/
+
 
 //Random names
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria', 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
@@ -6,7 +9,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'La
 
 // Variables and arraays
 const max = 10; //To use all names in the array
-let genTotal = 100000; //How many customers to generate
+let genTotal = 10000; //How many customers to generate
 let a = 1; // CustID
 const custList = []; 
 
@@ -40,12 +43,15 @@ class Customer {
 // Generate random customers and push them i Customer list
 var customer = [];
 
-for(let i = 0; i < genTotal; i++) {
-    customer = new Customer;
-    custList.push(customer);
-    // console.log(customer);
+function generateCustomers() {
+    for(let i = 0; i < genTotal; i++) {
+        customer = new Customer;
+        custList.push(customer);
+        // console.log(customer);
+    }
 }
 
+generateCustomers();
 // console.log(custList);
 
 // Print the custList on the site
@@ -128,13 +134,13 @@ function clustering() {
 // ********** MEASURING the clustering *********
 let timeTaken;
 let timeObjectClustering = [];
-const clusterIteration = 100;
-const measurePoints = 100;
+const clusterIteration = 200;
+const measurePoints = 500;
 
 
 function startClustering() {
     console.log("Started clustering OOD");
-    for (j=0; j < measurePoints; j++) {
+    // for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
@@ -145,15 +151,11 @@ function startClustering() {
         timeTaken = Date.now() - start;
         // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
         timeObjectClustering.push(timeTaken);
-
-    
-    }
+        console.log(buckets);
+        console.log(timeObjectClustering);
+    // }
     console.log("Finished clustering OOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
     // Checking the clusters
-    console.log(buckets);
-
-    console.log(timeObjectClustering);
-
 }
 
 

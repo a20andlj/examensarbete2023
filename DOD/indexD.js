@@ -8,7 +8,7 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson',
 
 // Variables
 const max = 10;
-let genTotal = 10000;
+let genTotal = 100000;
 let a = 1;
 
 // Get HTML elements
@@ -102,12 +102,14 @@ function clustering() {
         var total=0;
         var cnt=0;
         for (let j=i-1; j<=(i+1); j++) {
+               
             for (eneConsval of eneConsBuckets[j]){
                 if(Math.abs(eneConsval-midpoint)<treshold){
                     cnt++;
                     total+=eneConsval;
                 }
             }
+        
             var avg=total/cnt;
 
             //  console.log(i,avg,total,cnt,eneConsBuckets.length);
@@ -145,7 +147,7 @@ function clustering() {
 // ********* MEASURING the clustering **********
 let timeTaken;
 let timeDataorientedClustering = [];
-const measurePoints = 40;
+const measurePoints = 100;
 const clusterIteration = 50;
 
 function startClustering() {
@@ -153,20 +155,25 @@ function startClustering() {
     for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
-    // How many times the clusteralgoritm should iterate
+        // How many times the clusteralgoritm should iterate
 
-    for(i=0; i<clusterIteration; i++) {
-        clustering();
-    }
+        for(i=0; i<clusterIteration; i++) {
+            clustering();
+        }
 
-    timeTaken = Date.now() - start;
-    // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
-    timeDataorientedClustering.push(timeTaken);
+        timeTaken = Date.now() - start;
+        // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
+        timeDataorientedClustering.push(timeTaken);
+
+        // Checking the clusters
+        console.log(eneConsBuckets)
+        console.log(timeDataorientedClustering);
     }
 
     console.log("Finished clsutering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
     
-    // Checking the clusters
-    console.log(eneConsBuckets)
-    console.log(timeDataorientedClustering);
+    
+
+    
 }
+
