@@ -1,8 +1,6 @@
-
-
 /*********  OBJECT ORIENTED DESIGN  *********/
 
-// Set the seed************************
+// ***** Steer the Math-random *****
 function jsf32(a, b, c, d) {
     a |= 0; b |= 0; c |= 0; d |= 0;
     var t = a - (b << 23 | b >>> 9) | 0;
@@ -28,21 +26,19 @@ Math.setSeed = function(seed){
 var origRandom = Math.random;
 Math.randSeed = Math.floor(Date.now());
 
-// *********************************
+// ************************************
 
 
-//Random names
+// Random names for the customers
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria', 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
 const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
 var eneCons;
 
-
-
-// Variables and arraays
-const max = 10; //To use all names in the array
-let genTotal = 100; //How many customers to generate
-let a = 1; // CustID
-const custList = []; 
+// Variables
+const max = 10;         // To use all names in the array
+let genTotal = 100;     // How many customers to generate
+let a = 1;              // CustID
+const custList = [];    // Customer list array
 
 // Steering the random generation of customers
 Math.setSeed(genTotal);
@@ -54,19 +50,18 @@ const startCluster = document.getElementById('start-cluster');
 // Event listeners
 startCluster.addEventListener("click", startClustering);
 
-// Customer Class
+// Customer Class for thd Object oriented customer list
 class Customer {
     fname;
     lname;
     custID;
     eneCons;
-    
 
     constructor() {
         this.fname = fnames[Math.floor(Math.random()*max)],
         this.lname = lnames[Math.floor(Math.random()*max)],
         this.custID = a++,
-        this.eneCons = Math.floor(Math.random() * 30000); // <== CHANGE HERE
+        this.eneCons = Math.floor(Math.random() * 30000);   //Max customer energyconsumtion
     }
 
     // Function just to test if the class is working
@@ -75,7 +70,7 @@ class Customer {
     }
 }
 
-// Generate random customers and push them i Customer list
+// Generate random customers and push them into the Customer list
 var customer = [];
 
 function generateCustomers() {
@@ -88,9 +83,7 @@ function generateCustomers() {
 
 generateCustomers();
 
-// console.log(custList);
-
-// Print the custList on the site
+// Display customers on website
 function render() {
     str = "<table>";
     str += "<th>" + "Förnamn" + "</th>";
@@ -110,23 +103,23 @@ function render() {
 
 render();
 
-
-/****** CLUSTERING THE CUSTOMERS ENERGY CONSUMPTION ******/
-var hashes = [];
-var buckets =[];
-
+/****** CLUSTERING THE OBJECTORIENTED CUSTOMERS ENERGY CONSUMPTION ******/
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
 
 let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
 let treshold = 3500; // <== CHANGE HERE
 
-// Clustering --- OOD Application
+var hashes = [];
+var buckets =[];
+
+// Clustering function --- OOD Application
 function clustering() {
-    // Clear buckets for next iteration
+    // Clear buckets for the next iteration
     hashes = [];
     buckets = [];
     
+    // Sort the customers in 5 hashes
     for (customer of custList) {
         var hashindex = Math.floor(customer.eneCons/6000); // <== CHANGE HERE
         if (typeof hashes[hashindex] === 'undefined') {
@@ -138,7 +131,7 @@ function clustering() {
     buckets = hashes;
 
     for(let i=1; i<(buckets.length-1); i++) { 
-        var midpoint=(i*clusterTotal)+bucketCenter;
+        var midpoint = (i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
         for (let j=i-1; j<=(i+1); j++) {
@@ -170,13 +163,13 @@ function clustering() {
 // ********** MEASURING the clustering *********
 let timeTaken;
 let timeObjectClustering = [];
-const clusterIteration = 200;
-const measurePoints = 500;
+const measurePoints = 1;
+const clusterIteration = 7000;
 
 
 function startClustering() {
     console.log("Started clustering OOD");
-    // for (j=0; j < measurePoints; j++) {
+    for (j=0; j < measurePoints; j++) {
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
@@ -187,11 +180,13 @@ function startClustering() {
         timeTaken = Date.now() - start;
         // console.log("Total time taken OOD-clustering: " + timeTaken + " milliseconds");
         timeObjectClustering.push(timeTaken);
-        console.log(buckets);
+        
+        // Checking the clusters
+        console.log(buckets[4]);
         console.log(timeObjectClustering);
-    // }
+    }
+
     console.log("Finished clustering OOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
-    // Checking the clusters
 }
 
 

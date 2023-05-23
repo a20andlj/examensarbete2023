@@ -1,6 +1,6 @@
 /*********  DATA ORIENTED DESIGN  *********/
 
-// Set the seed************************
+// ***** Steer the Math-random *****
 function jsf32(a, b, c, d) {
     a |= 0; b |= 0; c |= 0; d |= 0;
     var t = a - (b << 23 | b >>> 9) | 0;
@@ -26,19 +26,20 @@ Math.setSeed = function(seed){
 var origRandom = Math.random;
 Math.randSeed = Math.floor(Date.now());
 
-// *********************************
+// ************************************
 
 
-// Random names
+
+// Random names for the customers
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria',
 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
 const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson',
 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
 
 // Variables
-const max = 10;
-let genTotal = 100;
-let a = 1;
+const max = 10;         // To use all names in the array
+let genTotal = 1000;     // How many customers to generate
+let a = 1;              // CustID
 
 // Steering the random generation of customers
 Math.setSeed(genTotal);
@@ -46,27 +47,32 @@ Math.setSeed(genTotal);
 // Get HTML elements
 let allCustomers = document.getElementById('customer-list');
 const startCluster = document.getElementById('start-cluster');
-// const stopCluster = document.getElementById('stop-cluster');
 
 // Event listeners
 startCluster.addEventListener("click", startClustering);
-// stopCluster.addEventListener("click", stopClustering);
 
-// 4 Customer arrays
 let fname = [];
 let lname = [];
 let custID = [];
 let eneCons = [];
 
+function restart() {
+    // 4 Customer arrays for the Data oriented customer list
+    fname = [];
+    lname = [];
+    custID = [];
+    eneCons = [];
+
 // DOD - Generate 4 arrays with random customers
-for(let i = 0; i < genTotal; i++) {
-     fname.push(fnames[Math.floor(Math.random()*max)]);
-     lname.push(lnames[Math.floor(Math.random()*max)]);
-     custID.push(a++);
-     eneCons.push(Math.floor(Math.random() * 30000))
+    for(let i = 0; i < genTotal; i++) {
+        fname.push(fnames[Math.floor(Math.random()*max)]);
+        lname.push(lnames[Math.floor(Math.random()*max)]);
+        custID.push(a++);
+        eneCons.push(Math.floor(Math.random() * 30000))    //Max customer energyconsumtion
+    }
 }
 
-// console.log(fname, lname, custID, eneCons);
+
 
 // Display customers on website
 function render() {
@@ -87,53 +93,49 @@ function render() {
      allCustomers.innerHTML=str;
 }
 
-render();
 
 
 /****** CLUSTERING THE DATAORIENTED CUSTOMERS ENERGYCONSUMPTION ******/
-
-// ****** K-means Clustering *****
-
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
+
 let bucketCenter = 3000; // <== CHANGE HERE
 let clusterTotal = 6000; // <== CHANGE HERE
 let treshold = 3500; // <== CHANGE HERE
 
 var hashesCustID = [];
 var hashesEneCons = [];
-var custIDBuckets;
-var eneConsBuckets;
+var custIDBuckets = [];
+var eneConsBuckets = [];
 
-// var loopcnt=0;
-
-// Clustering --- DOD Application
+// Clustering function --- DOD Application
 function clustering() {
 
-     // Clear buckets for next iteration
-     hashesCustID = [];
-     hashesEneCons = [];
+    // Clear buckets for the next iteration
+    hashesCustID = [];
+    hashesEneCons = [];
+    custIDBuckets = [];
+    eneConsBuckets = [];
 
-     // Sort the customers in 5 hashes and give them index
-     for (let i = 0; i < eneCons.length; i++) {
-         var hashindex = Math.floor(eneCons[i]/6000);
-         if (typeof hashesCustID[hashindex] === 'undefined') {
-             hashesCustID[hashindex] = [];
-             hashesEneCons[hashindex] = [];
-         }
-         hashesCustID[hashindex].push(custID[i]);
-         hashesEneCons[hashindex].push(eneCons[i]);
-     }
+    // Sort the customers in 5 hashes and give them index
+    for (let i = 0; i < eneCons.length; i++) {
+        var hashindex = Math.floor(eneCons[i]/6000);
+        if (typeof hashesCustID[hashindex] === 'undefined') {
+            hashesCustID[hashindex] = [];
+            hashesEneCons[hashindex] = [];
+        }
+        hashesCustID[hashindex].push(custID[i]);
+        hashesEneCons[hashindex].push(eneCons[i]);
+    }
 
-     eneConsBuckets = hashesEneCons;
-     custIDBuckets = hashesCustID;
+    eneConsBuckets = hashesEneCons;
+    custIDBuckets = hashesCustID;
 
     for(let i=1; i<(eneConsBuckets.length-1); i++) {
         var midpoint = (i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
         for (let j=i-1; j<=(i+1); j++) {
-               
-            for (eneConsval of eneConsBuckets[j]){
+            for(eneConsval of eneConsBuckets[j]){
                 if(Math.abs(eneConsval-midpoint)<treshold){
                     cnt++;
                     total+=eneConsval;
@@ -141,9 +143,6 @@ function clustering() {
             }
         
             var avg=total/cnt;
-
-            //  console.log(i,avg,total,cnt,eneConsBuckets.length);
-
             for(var k=0; k<eneConsBuckets[j].length; k++){
                 var eneConsval=eneConsBuckets[j][k];
                 if(Math.abs(eneConsval-avg)<treshold){
@@ -154,39 +153,38 @@ function clustering() {
                     }else{
                         dist=-(1+dist);
                     }
-                    // loopcnt++;
-                    // if(loopcnt<100)
-                //  console.log(eneConsBuckets[j][k],dist);
                     eneConsBuckets[j][k]-=dist;
-                    // if(loopcnt<100)
-                    //console.log(eneConsBuckets[j][k],dist);
                 }
             }
         }
     }
-     // Move back the updated data to the eneCons array.
-     for (let i = 0; i < eneConsBuckets.length; i++) {
-         for (let j = 0; j < eneConsBuckets[i].length; j++) {
-             index = custIDBuckets[i][j];
-             eneCons[index] = eneConsBuckets[i][j];
-         }
-     }
+    // Move back the updated data to the eneCons array.
+    for (let i = 0; i < eneConsBuckets.length; i++) {
+        for (let j = 0; j < eneConsBuckets[i].length; j++) {
+            index = custIDBuckets[i][j];
+            eneCons[index] = eneConsBuckets[i][j];
+            console.log(index, eneCons[index]);
+        }
+        
+    }
+    console.log(eneCons);
 }
 
 
 // ********* MEASURING the clustering **********
 let timeTaken;
 let timeDataorientedClustering = [];
-const measurePoints = 100;
-const clusterIteration = 50;
+const measurePoints = 10;
+const clusterIteration = 2;
 
 function startClustering() {
     console.log("Started clustering DOD");
     for (j=0; j < measurePoints; j++) {
+        restart();
+
         let start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-
         for(i=0; i<clusterIteration; i++) {
             clustering();
         }
@@ -195,15 +193,13 @@ function startClustering() {
         // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
         timeDataorientedClustering.push(timeTaken);
 
-        // Checking the clusters
-        console.log(eneConsBuckets)
-        console.log(timeDataorientedClustering);
+        
     }
+    // Checking the clusters
+    render();
+    console.log(eneConsBuckets)
+    console.log(timeDataorientedClustering);
 
-    console.log("Finished clsutering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
-    
-    
-
-    
+    console.log("Finished clsutering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)    
 }
 
