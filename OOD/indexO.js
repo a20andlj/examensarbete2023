@@ -14,7 +14,7 @@ function jsf32(a, b, c, d) {
   
 Math.random = function() {
     var ran=jsf32(0xF1EA5EED,Math.randSeed+6871,Math.randSeed+1889,Math.randSeed+56781);
-    Math.randSeed+=Math.floor(ran*37237);
+    Math.randSeed+=Math.floor(ran*1000000); // original 37237
     return(ran)
 }
   
@@ -32,19 +32,18 @@ Math.randSeed = Math.floor(Date.now());
 // Random names for the customers
 const fnames = ['Karl', 'Erik', 'Lars', 'Anders', 'Per', 'Maria', 'Elisabeth', 'Anna', 'Kristina', 'Margareta'];
 const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson', 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
-var eneCons;
 
 // Variables
-const max = 10;         // To use all names in the array
-let genTotal = 100;     // How many customers to generate
-let a = 1;              // CustID
-const custList = [];    // Customer list array
+const max = 10;             // To use all names in the array
+var genTotal = 1000000;       // How many customers to generate
+var a = 1;                  // CustID
+
 
 // Steering the random generation of customers
 Math.setSeed(genTotal);
 
 // Get HTML elements
-let allCustomers = document.getElementById('customer-list');
+var allCustomers = document.getElementById('customer-list');
 const startCluster = document.getElementById('start-cluster');
 
 // Event listeners
@@ -72,16 +71,15 @@ class Customer {
 
 // Generate random customers and push them into the Customer list
 var customer = [];
+var custList = [];         
 
 function generateCustomers() {
-    for(let i = 0; i < genTotal; i++) {
+    for(var i = 0; i < genTotal; i++) {
         customer = new Customer;
         custList.push(customer);
         // console.log(customer);
     }
 }
-
-generateCustomers();
 
 // Display customers on website
 function render() {
@@ -101,14 +99,12 @@ function render() {
     allCustomers.innerHTML = str;
 }
 
-render();
-
 /****** CLUSTERING THE OBJECTORIENTED CUSTOMERS ENERGY CONSUMPTION ******/
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
 
-let bucketCenter = 3000; // <== CHANGE HERE
-let clusterTotal = 6000; // <== CHANGE HERE
-let treshold = 3500; // <== CHANGE HERE
+var bucketCenter = 3000; // <== CHANGE HERE
+var clusterTotal = 6000; // <== CHANGE HERE
+var treshold = 4000; // <== CHANGE HERE
 
 var hashes = [];
 var buckets =[];
@@ -130,11 +126,11 @@ function clustering() {
     
     buckets = hashes;
 
-    for(let i=1; i<(buckets.length-1); i++) { 
+    for(var i=1; i<(buckets.length-1); i++) { 
         var midpoint = (i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
-        for (let j=i-1; j<=(i+1); j++) {
+        for (var j=i-1; j<=(i+1); j++) {
             for(customer of buckets[j]){
                 if(Math.abs(customer.eneCons-midpoint)<treshold){
                     cnt++;
@@ -161,19 +157,22 @@ function clustering() {
 
 
 // ********** MEASURING the clustering *********
-let timeTaken;
-let timeObjectClustering = [];
-const measurePoints = 1;
-const clusterIteration = 7000;
-
+var timeTaken;
+var timeObjectClustering = [];
+const measurePoints = 10;
+const clusterIteration = 100;
 
 function startClustering() {
     console.log("Started clustering OOD");
-    for (j=0; j < measurePoints; j++) {
-        let start = Date.now();
+    for (var j=0; j < measurePoints; j++) {
+        custList = [];
+        generateCustomers();
+        
+
+        var start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        for(i=0; i<clusterIteration; i++) {
+        for(var i=0; i<clusterIteration; i++) {
             clustering();
         }
 
@@ -182,11 +181,10 @@ function startClustering() {
         timeObjectClustering.push(timeTaken);
         
         // Checking the clusters
-        console.log(buckets[4]);
+        console.log(buckets);
         console.log(timeObjectClustering);
+        
     }
-
+    render();
     console.log("Finished clustering OOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)
 }
-
-

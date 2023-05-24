@@ -14,7 +14,7 @@ function jsf32(a, b, c, d) {
   
 Math.random = function() {
     var ran=jsf32(0xF1EA5EED,Math.randSeed+6871,Math.randSeed+1889,Math.randSeed+56781);
-    Math.randSeed+=Math.floor(ran*37237);
+    Math.randSeed+=Math.floor(ran*1000000); // original 37237
     return(ran)
 }
   
@@ -37,33 +37,28 @@ const lnames = ['Andersson', 'Johansson', 'Karlsson', 'Nilsson',
 'Eriksson', 'Larsson', 'Olsson', 'Persson', 'Svensson', 'Gustafsson'];
 
 // Variables
-const max = 10;         // To use all names in the array
-let genTotal = 1000;     // How many customers to generate
-let a = 1;              // CustID
+const max = 10;             // To use all names in the array
+let genTotal = 1000000;       // How many customers to generate
+let a = 1;                  // CustID
 
 // Steering the random generation of customers
 Math.setSeed(genTotal);
 
 // Get HTML elements
-let allCustomers = document.getElementById('customer-list');
+var allCustomers = document.getElementById('customer-list');
 const startCluster = document.getElementById('start-cluster');
 
 // Event listeners
 startCluster.addEventListener("click", startClustering);
 
-let fname = [];
-let lname = [];
-let custID = [];
-let eneCons = [];
+// Arrays for the customers
+var fname = [];
+var lname = [];
+var custID = [];
+var eneCons = [];
 
-function restart() {
-    // 4 Customer arrays for the Data oriented customer list
-    fname = [];
-    lname = [];
-    custID = [];
-    eneCons = [];
-
-// DOD - Generate 4 arrays with random customers
+// DOD - Generate random customers to 4 arrays
+function generateCustomers() {
     for(let i = 0; i < genTotal; i++) {
         fname.push(fnames[Math.floor(Math.random()*max)]);
         lname.push(lnames[Math.floor(Math.random()*max)]);
@@ -98,9 +93,9 @@ function render() {
 /****** CLUSTERING THE DATAORIENTED CUSTOMERS ENERGYCONSUMPTION ******/
 // All 5 buckets and there bordervalues 0-5900 6000-11900 12000-17900 18000-23900 24000-29999
 
-let bucketCenter = 3000; // <== CHANGE HERE
-let clusterTotal = 6000; // <== CHANGE HERE
-let treshold = 3500; // <== CHANGE HERE
+var bucketCenter = 3000; // <== CHANGE HERE
+var clusterTotal = 6000; // <== CHANGE HERE
+var treshold = 4000; // <== CHANGE HERE
 
 var hashesCustID = [];
 var hashesEneCons = [];
@@ -115,6 +110,7 @@ function clustering() {
     hashesEneCons = [];
     custIDBuckets = [];
     eneConsBuckets = [];
+   
 
     // Sort the customers in 5 hashes and give them index
     for (let i = 0; i < eneCons.length; i++) {
@@ -129,12 +125,13 @@ function clustering() {
 
     eneConsBuckets = hashesEneCons;
     custIDBuckets = hashesCustID;
+    var eneConsval = 0;
 
-    for(let i=1; i<(eneConsBuckets.length-1); i++) {
+    for(var i=1; i<(eneConsBuckets.length-1); i++) {
         var midpoint = (i*clusterTotal)+bucketCenter;
         var total=0;
         var cnt=0;
-        for (let j=i-1; j<=(i+1); j++) {
+        for (var j=i-1; j<=(i+1); j++) {
             for(eneConsval of eneConsBuckets[j]){
                 if(Math.abs(eneConsval-midpoint)<treshold){
                     cnt++;
@@ -159,33 +156,33 @@ function clustering() {
         }
     }
     // Move back the updated data to the eneCons array.
-    for (let i = 0; i < eneConsBuckets.length; i++) {
-        for (let j = 0; j < eneConsBuckets[i].length; j++) {
+    for (var i = 0; i < eneConsBuckets.length; i++) {
+        for (var j = 0; j < eneConsBuckets[i].length; j++) {
             index = custIDBuckets[i][j];
             eneCons[index] = eneConsBuckets[i][j];
-            console.log(index, eneCons[index]);
         }
         
     }
-    console.log(eneCons);
 }
 
 
 // ********* MEASURING the clustering **********
-let timeTaken;
-let timeDataorientedClustering = [];
+var timeTaken;
+var timeDataorientedClustering = [];
 const measurePoints = 10;
-const clusterIteration = 2;
+const clusterIteration = 100;
 
 function startClustering() {
     console.log("Started clustering DOD");
-    for (j=0; j < measurePoints; j++) {
-        restart();
+    for (var j=0; j < measurePoints; j++) {
+        eneCons =[];
 
-        let start = Date.now();
+        generateCustomers();
+
+        var start = Date.now();
 
         // How many times the clusteralgoritm should iterate
-        for(i=0; i<clusterIteration; i++) {
+        for(var i=0; i<clusterIteration; i++) {
             clustering();
         }
 
@@ -193,13 +190,14 @@ function startClustering() {
         // console.log("Total time taken DOD-clustering: " + timeTaken + " milliseconds");
         timeDataorientedClustering.push(timeTaken);
 
+        // Checking the clusters
+        console.log(eneConsBuckets)
+        console.log(timeDataorientedClustering);
         
     }
-    // Checking the clusters
+    
     render();
-    console.log(eneConsBuckets)
-    console.log(timeDataorientedClustering);
 
-    console.log("Finished clsutering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)    
+    console.log("Finished clustering DOD, Iterations = " + clusterIteration + ", Total customers: " + genTotal)    
 }
 
